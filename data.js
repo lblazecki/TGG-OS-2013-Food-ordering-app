@@ -19,7 +19,30 @@ function saveOrders(allOrders, callback) {
     });
 }
 
+function getSavedOffers(callback) {
+    fs.readFile(config.offerFileName, function (error, allOffers) {
+        if (error) {
+            console.log("Error on reading offers : " + error);
+            callback({});
+            return;
+        }
+        callback(JSON.parse(allOffers));
+    });
+}
+
+function getSavedOrders(callback) {
+    fs.readFile(config.orderFileName, function (error, allOrders) {
+        if (error) {
+            console.log("Error on reading orders : " + error);
+            callback({});
+            return;
+        }
+        callback(JSON.parse(allOrders));
+    });
+}
 
 exports.saveOffers      = saveOffers;
 exports.saveOrders      = saveOrders;
+exports.getSavedOffers  = getSavedOffers;
+exports.getSavedOrders  = getSavedOrders;
 
