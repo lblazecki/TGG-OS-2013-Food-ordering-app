@@ -1,0 +1,9 @@
+{
+    "name": "TGG-OS-2013 Food ordering app",
+    "description": "App for ordering meals",
+    "dependencies": {
+        "express": "3.2.6"
+    },
+    "engine": "node >= 0.10.12",
+    "version": "0.0.1-SNAPSHOT"
+}
