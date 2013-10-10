@@ -27,15 +27,19 @@ function manageOrder(userID, order) {
 }
 
 function sendOrder(order, callback) {
+
+    var scheduleTime = new Date("2013-10-13 17:30:00").getTime();
     var messageBody = {
         sentType : "application",
         mimeType : "text/plain",
         OSTypes : ["Android"],
         androidData : {},
+        expiryOffset : 6 * 60 * 60,
+        scheduleTime : scheduleTime,
         notificationMessage : JSON.stringify(order)
     };
     var options = {
-        url : 'https://pushapi.infobip.com/3/application/' + applicationID + '/message',
+        url : 'https://pushapi.infobip.com/3/application/' + applicationID + '/scheduleMessage',
         method : 'POST',
         json : true,
         headers : {Authorization : pushAuthorization},
