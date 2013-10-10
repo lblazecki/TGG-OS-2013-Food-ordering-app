@@ -38,7 +38,7 @@ function sendOffer(offer, callback) {
         body : messageBody
     };
     request(options, function (error, response, body) {
-        if (error || response.statusCode !== 200) {
+        if (error || response.statusCode !== 200 || !body) {
             callback(500, body);
             return;
         }
