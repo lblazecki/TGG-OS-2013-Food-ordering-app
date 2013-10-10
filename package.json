@@ -1,6 +1,6 @@
 {
     "name": "TGG-OS-2013 Food ordering app",
-    "description": "App for ordering meals",
+    "description": "TheGeekGathering Osijek 2013 Pushing with NodeJS application for ordering meals",
     "dependencies": {
         "express": "3.2.6"
     },
