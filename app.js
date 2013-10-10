@@ -14,11 +14,12 @@ app.get('/user/:userID/allAvailableChannels', function (req, res) {
     });
 });
 app.post('/user/:userID/order', function (req, res) {
-    business.manageOrder(req.params.userID, req.body);
-    res.send(204, null);
+    business.manageOrder(req.params.userID, req.body, function (code, returnObject) {
+        res.send(code, returnObject);
+    });
 });
-app.post('/sendOrder', function (req, res) {
-    business.sendOrder(req.body, function (code, returnObject) {
+app.post('/sendOffer', function (req, res) {
+    business.sendOffer(req.body, function (code, returnObject) {
         res.send(code, returnObject);
     });
 });

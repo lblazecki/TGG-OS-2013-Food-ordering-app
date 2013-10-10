@@ -1,11 +1,23 @@
 var request             = require('request');
 var config              = require('./config');
+var data                = require('./data');
 
-function manageOrder(userID, order) {
-    console.log('User with ' + userID + ', ordered : ' + JSON.stringify(order));
+var allOffers = {};
+var allOrders = {};
+
+function manageOrder(userID, order, callback) {
+    if (!allOrders[order.offerID]) {
+        callback(400, 'The offer for this order does not exist');
+        return;
+    }
+    allOrders[order.offerID].push({orderFood : order.orderFood, userID : userID});
+    data.saveOrders(allOrders, function () {
+        callback(204, null);
+        console.log('User with ' + userID + ', ordered : ' + JSON.stringify(order));
+    });
 }
 
-function sendOrder(order, callback) {
+function sendOffer(offer, callback) {
 
     var scheduleTime = new Date("2013-10-13 17:30:00").getTime();
     var messageBody = {
@@ -16,21 +28,26 @@ function sendOrder(order, callback) {
         androidData : {},
         expiryOffset : 6 * 60 * 60,
         scheduleTime : scheduleTime,
-        notificationMessage : JSON.stringify(order)
+        notificationMessage : JSON.stringify(offer)
     };
     var options = {
-        url : 'https://pushapi.infobip.com/3/application/' + config.applicationID + '/scheduleMessage',
+        url : 'https://pushapi.infobip.com/3/application/' + config.applicationID + '/message',
         method : 'POST',
         json : true,
         headers : {Authorization : config.pushAuthorization},
         body : messageBody
     };
     request(options, function (error, response, body) {
-        if (error || response.statusCode  !== 200) {
-            callback(200, body);
+        if (error || response.statusCode !== 200) {
+            callback(500, body);
             return;
         }
-        callback(500, body);
+        offer.id = body.messageID;
+        allOrders[offer.id] = [];
+        allOffers[offer.id] = offer;
+        data.saveOffers(allOffers, function () {
+            callback(200, body);
+        });
     });
 }
 
@@ -43,13 +60,13 @@ function getAllAvailableChannels(callback) {
     };
     request(options, function (error, response, body) {
         if (error || response.statusCode  !== 200) {
-            callback(200, body);
+            callback(500, body);
             return;
         }
-        callback(500, body);
+        callback(200, body);
     });
 }
 
 exports.manageOrder                 = manageOrder;
-exports.sendOrder                   = sendOrder;
+exports.sendOffer                   = sendOffer;
 exports.getAllAvailableChannels     = getAllAvailableChannels;
