@@ -38,9 +38,10 @@ function sendOrder(order, callback) {
 
     var scheduleTime = new Date("2013-10-13 17:30:00").getTime();
     var messageBody = {
-        sentType : "application",
+        sentType : "channels",
         mimeType : "text/plain",
         OSTypes : ["Android"],
+        channelNames : ['Osijek'],
         androidData : {},
         expiryOffset : 6 * 60 * 60,
         scheduleTime : scheduleTime,
