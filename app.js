@@ -9,6 +9,11 @@ app.use(express.bodyParser());
 app.get('/hello', function (req, res) {
     res.send({message: 'Hello World'});
 });
+app.get('/user/:userID/allAvailableChannels', function (req, res) {
+    getAllAvailableChannels(function (code, channels) {
+        res.send(code, channels);
+    });
+});
 app.post('/user/:userID/order', function (req, res) {
     manageOrder(req.params.userID, req.body);
     res.send(204, null);
@@ -30,9 +35,10 @@ function sendOrder(order, callback) {
 
     var scheduleTime = new Date("2013-10-13 17:30:00").getTime();
     var messageBody = {
-        sentType : "application",
+        sentType : "channels",
         mimeType : "text/plain",
         OSTypes : ["Android"],
+        channelNames : ['Osijek'],
         androidData : {},
         expiryOffset : 6 * 60 * 60,
         scheduleTime : scheduleTime,
@@ -44,6 +50,23 @@ function sendOrder(order, callback) {
         json : true,
         headers : {Authorization : pushAuthorization},
         body : messageBody
+    };
+    request(options, function (error, response, body) {
+        if (error || response.statusCode  !== 200) {
+            callback(200, body);
+            return;
+        }
+        callback(500, body);
+    });
+}
+
+
+function getAllAvailableChannels(callback) {
+    var options = {
+        url : 'https://pushapi.infobip.com/1/application/' + applicationID + '/channels',
+        method : 'GET',
+        json : true,
+        headers : {Authorization : pushAuthorization}
     };
     request(options, function (error, response, body) {
         if (error || response.statusCode  !== 200) {
