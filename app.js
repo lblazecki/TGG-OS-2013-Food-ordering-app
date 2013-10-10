@@ -3,7 +3,6 @@ var business            = require('./business');
 var app = express();
 
 
-
 app.use(express.bodyParser());
 app.get('/hello', function (req, res) {
     res.send({message: 'Hello World'});
@@ -24,7 +23,10 @@ app.post('/sendOffer', function (req, res) {
     });
 });
 
-app.listen(3000);
-console.log("Server up and listening on port 3000");
+business.prePopulateData(function () {
+    app.listen(3000);
+    console.log("Server up and listening on port 3000");
+});
+
 
 

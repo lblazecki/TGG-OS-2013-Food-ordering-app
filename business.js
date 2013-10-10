@@ -5,6 +5,16 @@ var data                = require('./data');
 var allOffers = {};
 var allOrders = {};
 
+function prePopulateData(callback) {
+    data.getSavedOffers(function (savedOffers) {
+        data.getSavedOrders(function (savedOrders) {
+            allOffers = savedOffers;
+            allOrders = savedOrders;
+            callback();
+        });
+    });
+}
+
 function manageOrder(userID, order, callback) {
     if (!allOrders[order.offerID]) {
         callback(400, 'The offer for this order does not exist');
@@ -31,7 +41,7 @@ function sendOffer(offer, callback) {
         notificationMessage : JSON.stringify(offer)
     };
     var options = {
-        url : 'https://pushapi.infobip.com/3/application/' + config.applicationID + '/message',
+        url : 'https://pushapi.infobip.com/3/application/' + config.applicationID + '/scheduleMessage',
         method : 'POST',
         json : true,
         headers : {Authorization : config.pushAuthorization},
@@ -67,6 +77,7 @@ function getAllAvailableChannels(callback) {
     });
 }
 
+exports.prePopulateData             = prePopulateData;
 exports.manageOrder                 = manageOrder;
 exports.sendOffer                   = sendOffer;
 exports.getAllAvailableChannels     = getAllAvailableChannels;
