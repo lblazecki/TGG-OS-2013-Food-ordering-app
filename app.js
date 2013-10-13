@@ -2,8 +2,8 @@ var express             = require('express');
 var request             = require('request');
 var app = express();
 
-var applicationID       = '0607c3f5d047';
-var pushAuthorization   = 'Basic dGdnMjAxMzp0Z2cyMDEz';
+var applicationID       = '868e545dffae';
+var pushAuthorization   = 'Basic cHVzaGRlbW86dGdnMjAxMw==';
 
 app.use(express.bodyParser());
 app.get('/hello', function (req, res) {
@@ -66,10 +66,10 @@ function getAllAvailableChannels(callback) {
         headers : {Authorization : pushAuthorization}
     };
     request(options, function (error, response, body) {
-        if (error || response.statusCode  !== 200) {
-            callback(200, body);
+        if (error || response.statusCode !== 200) {
+            callback(500, body);
             return;
         }
-        callback(500, body);
+        callback(200, body);
     });
 }
