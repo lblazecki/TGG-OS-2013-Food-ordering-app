@@ -4,10 +4,12 @@ var app = express();
 
 
 app.use(express.bodyParser());
+app.use(express.static(__dirname + '/views'));
+
 app.get('/hello', function (req, res) {
     res.send({message: 'Hello World'});
 });
-app.get('/user/:userID/allAvailableChannels', function (req, res) {
+app.get('/allAvailableChannels', function (req, res) {
     business.getAllAvailableChannels(function (code, channels) {
         res.send(code, channels);
     });
