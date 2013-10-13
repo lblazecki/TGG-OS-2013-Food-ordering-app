@@ -1,30 +1,9 @@
 var request             = require('request');
 var config              = require('./config');
-var data                = require('./data');
-
-var allOffers = {};
-var allOrders = {};
-
-function prePopulateData(callback) {
-    data.getSavedOffers(function (savedOffers) {
-        data.getSavedOrders(function (savedOrders) {
-            allOffers = savedOffers;
-            allOrders = savedOrders;
-            callback();
-        });
-    });
-}
 
 function manageOrder(userID, order, callback) {
-    if (!allOrders[order.offerID]) {
-        callback(400, 'The offer for this order does not exist');
-        return;
-    }
-    allOrders[order.offerID].push({orderFood : order.orderFood, userID : userID});
-    data.saveOrders(allOrders, function () {
-        callback(204, null);
-        console.log('User with ' + userID + ', ordered : ' + JSON.stringify(order));
-    });
+    console.log('User with ' + userID + ', ordered : ' + JSON.stringify(order));
+    callback(204, null);
 }
 
 function sendOffer(offer, callback) {
@@ -34,7 +13,7 @@ function sendOffer(offer, callback) {
         sentType : "channels",
         mimeType : "text/plain",
         OSTypes : ["Android"],
-        channelNames : ['Osijek'],
+        channelNames : ['Kod Ruže'],
         androidData : {},
         expiryOffset : 6 * 60 * 60,
         scheduleTime : scheduleTime,
@@ -52,12 +31,7 @@ function sendOffer(offer, callback) {
             callback(500, body);
             return;
         }
-        offer.id = body.messageID;
-        allOrders[offer.id] = [];
-        allOffers[offer.id] = offer;
-        data.saveOffers(allOffers, function () {
-            callback(200, body);
-        });
+        callback(200, body);
     });
 }
 
@@ -77,7 +51,6 @@ function getAllAvailableChannels(callback) {
     });
 }
 
-exports.prePopulateData             = prePopulateData;
 exports.manageOrder                 = manageOrder;
 exports.sendOffer                   = sendOffer;
 exports.getAllAvailableChannels     = getAllAvailableChannels;
