@@ -9,7 +9,7 @@ app.use(express.bodyParser());
 app.get('/hello', function (req, res) {
     res.send({message: 'Hello World'});
 });
-app.get('/user/:userID/allAvailableChannels', function (req, res) {
+app.get('/allAvailableChannels', function (req, res) {
     getAllAvailableChannels(function (code, channels) {
         res.send(code, channels);
     });
@@ -18,8 +18,8 @@ app.post('/user/:userID/order', function (req, res) {
     manageOrder(req.params.userID, req.body);
     res.send(204, null);
 });
-app.post('/sendOrder', function (req, res) {
-    sendOrder(req.body, function (code, returnObject) {
+app.post('/sendOffer', function (req, res) {
+    sendOffer(req.body, function (code, returnObject) {
         res.send(code, returnObject);
     });
 });
@@ -31,32 +31,29 @@ function manageOrder(userID, order) {
     console.log('User with ' + userID + ', ordered : ' + JSON.stringify(order));
 }
 
-function sendOrder(order, callback) {
+function sendOffer(order, callback) {
 
-    var scheduleTime = new Date("2013-10-13 17:30:00").getTime();
     var messageBody = {
         sentType : "channels",
         mimeType : "text/plain",
         OSTypes : ["Android"],
-        channelNames : ['Osijek'],
+        channelNames : ['Kod Ruže'],
         androidData : {},
-        expiryOffset : 6 * 60 * 60,
-        scheduleTime : scheduleTime,
         notificationMessage : JSON.stringify(order)
     };
     var options = {
-        url : 'https://pushapi.infobip.com/3/application/' + applicationID + '/scheduleMessage',
+        url : 'https://pushapi.infobip.com/3/application/' + applicationID + '/message',
         method : 'POST',
         json : true,
         headers : {Authorization : pushAuthorization},
         body : messageBody
     };
     request(options, function (error, response, body) {
-        if (error || response.statusCode  !== 200) {
-            callback(200, body);
+        if (error || response.statusCode !== 200) {
+            callback(500, body);
             return;
         }
-        callback(500, body);
+        callback(200, body);
     });
 }
 
