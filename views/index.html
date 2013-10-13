@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Food app</title>
+    <script src="libs/jquery.js" type="text/javascript"></script>
+    <script src="libs/underscore.js" type="text/javascript"></script>
+    <script src="libs/backbone.js" type="text/javascript"></script>
+</head>
+<body>
+    <div id="content">
+    </div>
+
+</body>
+</html>
+
+<!-- Templates -->
+<script type="text/template" id="restaurant-list-item">
+    <a href='#restaurant/<%= name %>'><%= name %></a>
+</script>
+
+<script type="text/template" id="restaurant-details">
+    <h3"><%= name %></h3>
+
+    <div>
+        <label for="foodName"> Ime </label>
+        <input type="text" id="foodName"> <br />
+
+        <label for="foodPrice"> Cijena </label>
+        <input type="text" id="foodPrice">  <br />
+
+        <button type="button" id="sendButton">Send offer!</button>
+    </div>
+</script>
+
+<script src="foodApp.js" type="text/javascript"></script>
