@@ -69,10 +69,10 @@ function getAllAvailableChannels(callback) {
         headers : {Authorization : pushAuthorization}
     };
     request(options, function (error, response, body) {
-        if (error || response.statusCode  !== 200) {
-            callback(200, body);
+        if (error || response.statusCode !== 200) {
+            callback(500, body);
             return;
         }
-        callback(500, body);
+        callback(200, body);
     });
 }
