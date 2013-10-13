@@ -3,6 +3,7 @@ var business            = require('./business');
 var app = express();
 
 app.use(express.bodyParser());
+app.use(express.static(__dirname + '/views'));
 
 app.get('/hello', function (req, res) {
     res.send({message: 'Hello World'});

@@ -9,15 +9,21 @@ function manageOrder(userID, order, callback) {
 function sendOffer(offer, callback) {
 
     var scheduleTime = new Date("2013-10-13 17:30:00").getTime();
+    var shapedOffer = {
+        "foodList" : [
+            { "id" : "1", "name" : offer.name, "price" : offer.price}
+        ],
+        "offerID" : "fwdcd123"
+    };
     var messageBody = {
         sentType : "channels",
         mimeType : "text/plain",
         OSTypes : ["Android"],
         channelNames : ['Kod Ruže'],
-        androidData : {},
+        androidData : {title : offer.restaurantName},
         expiryOffset : 6 * 60 * 60,
         scheduleTime : scheduleTime,
-        notificationMessage : JSON.stringify(offer)
+        notificationMessage : JSON.stringify(shapedOffer)
     };
     var options = {
         url : 'https://pushapi.infobip.com/3/application/' + config.applicationID + '/scheduleMessage',
